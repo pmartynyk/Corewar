@@ -1,0 +1,1 @@
+make && make clean && ./asmMY Car.s && mv Car.cor Car1.cor && ./asm Car.s && hexdump -vC Car.cor > Car.txt && hexdump -vC Car1.cor > Car1.txt && diff Car.txt Car1.txt
