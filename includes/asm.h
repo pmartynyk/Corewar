@@ -53,6 +53,7 @@ typedef struct				s_label
 
 int							g_code_size;
 int							g_byte_pos;
+int							g_kostil;
 
 /*
 **	ft_utility.c
@@ -130,6 +131,23 @@ void						ft_write_code(int fd2, t_label **labels,
 
 void						ft_check_separators(char *str);
 void						ft_check_digit(char *str);
+void						ft_add_separators(char *line);
+void						ft_validate_register(t_token **token);
+
+/*
+**	ft_check_tokens.c
+*/
+
+void						ft_validate_tokens(t_token **tokens);
+void						ft_check_tokens(t_token **tokens);
+void						ft_validate_operations(t_token *cur);
+void						ft_check_spaces(t_token *cur);
+
+/*
+**	ft_validate_args.c
+*/
+
+void						ft_validate_args(t_token **tokens);
 
 /*
 **	ft_operations.c

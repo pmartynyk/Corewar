@@ -24,6 +24,7 @@ void		init_vm(t_vmka **vmka, int i)
 	(*vmka)->carr = NULL;
 	(*vmka)->speed = 512;
 	(*vmka)->cycles = 1;
+	(*vmka)->cycles_to_die = CYCLE_TO_DIE;
 	while (++i < MAX_PLAYERS)
 	{
 		(*vmka)->bot[i] = (t_bot *)ft_memalloc(sizeof(t_bot));

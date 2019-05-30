@@ -17,17 +17,30 @@
 */
 
 void				get_and_check_bot_code(char *bot_code, t_bot **bot,
-									int num)
+	int num, int *fd)
 {
+	char			*code;
 	int				step;
+	int				n;
 
 	ft_memcpy(&(*bot)->code_size, &bot_code[4 + PROG_NAME_LENGTH + 4], 4);
 	reverse_bits(&(*bot)->code_size, 4);
 	if ((*bot)->code_size < 0 || (*bot)->code_size > CHAMP_MAX_SIZE)
 		error_management("ERROR: invalid champion code size!\n");
+	code = (char *)ft_memalloc(sizeof(char) * (*bot)->code_size + 1);
+	if ((n = read((*fd), code, (*bot)->code_size)) < 0)
+		error_management("ERROR: unable to read file!\n");
+	if (n < (*bot)->code_size)
+		error_management("ERROR: unable to read file!\n");
+	if (n > MAX_BOT_SIZE - MIN_BOT_SIZE)
+		error_management("ERROR: wrong champion size!\n");
 	step = -1;
 	while (++step < (*bot)->code_size && step < num)
-		(*bot)->code[step] = bot_code[MIN_BOT_SIZE + step];
+		(*bot)->code[step] = code[step];
+	free(code);
+	if ((n = read((*fd), code, (*bot)->code_size)) > 0)
+		error_management("ERROR: unable to read file!\n");
+	close((*fd));
 }
 
 /*
@@ -62,21 +75,19 @@ static void			check_magic_header(char *bot_code)
 **	Проверка названия файла и запись содержимого в bot_code
 */
 
-static void			check_file_name(char *bot_file, char **bot_code, int *num)
+static void			check_file_name(char *bot_file, char **bot_code,
+	int *num, int *fd)
 {
-	int				fd;
-
 	if (bot_file[0] == '\0' || !ft_strcmp(bot_file, ".cor"))
 		error_management("ERROR: incorrect champion name!\n");
 	if (ft_strcmp(ft_strrchr(bot_file, '.'), ".cor"))
 		error_management("ERROR: invalid file extension!\n");
-	if ((fd = open(bot_file, O_RDONLY)) < 0)
+	if (((*fd) = open(bot_file, O_RDONLY)) < 0)
 		error_management("ERROR: this file doesn't exist!\n");
-	if (((*num) = read(fd, (*bot_code), MAX_BOT_SIZE)) < 0)
+	if (((*num) = read((*fd), (*bot_code), MIN_BOT_SIZE)) < 0)
 		error_management("ERROR: unable to read file!\n");
 	if ((*num) < MIN_BOT_SIZE || (*num) > MAX_BOT_SIZE)
 		error_management("ERROR: wrong champion size!\n");
-	close(fd);
 }
 
 /*
@@ -87,12 +98,13 @@ void				add_bot_to_battle(char *bot_file, t_bot **bot)
 {
 	int				num;
 	char			*bot_code;
+	int				fd;
 
 	num = -1;
 	bot_code = (char *)ft_memalloc(sizeof(char) * 5000);
-	check_file_name(bot_file, &bot_code, &num);
+	check_file_name(bot_file, &bot_code, &num, &fd);
 	check_magic_header(bot_code);
 	get_bot_name_and_comment(bot_code, bot, -1);
-	get_and_check_bot_code(bot_code, bot, num);
+	get_and_check_bot_code(bot_code, bot, num, &fd);
 	free(bot_code);
 }

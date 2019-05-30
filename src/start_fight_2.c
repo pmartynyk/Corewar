@@ -19,10 +19,10 @@ static void		dump(t_vmka **vmka, int step)
 	{
 		if (!step)
 			ft_printf("0x0000 : ");
-		else if (step % 64 == 0)
+		else if (step % (*vmka)->octet_dump == 0)
 			ft_printf("0x%04x : ", step);
 		ft_printf("%02x ", (*vmka)->field[step].place);
-		if ((step + 1) % 64 == 0)
+		if ((step + 1) % (*vmka)->octet_dump == 0)
 			ft_printf("\n");
 	}
 	exit(0);

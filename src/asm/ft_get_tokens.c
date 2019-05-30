@@ -39,6 +39,7 @@ void			ft_check_ind(char *str, t_label **labels)
 static void		ft_get_rest_2(t_token **cur, t_label **labels, char ***mass,
 								int i)
 {
+	(*cur)->value = (*mass)[i];
 	if ((*mass)[i][0] == 'r')
 	{
 		g_code_size++;
@@ -76,6 +77,7 @@ void			ft_get_rest(char *str, t_token **tokens, int i,
 	cur = *tokens;
 	str = ft_destroy_comments(str);
 	mass = ft_strsplit(str, SEPARATOR_CHAR);
+	ft_add_separators(str);
 	while (mass[++i])
 	{
 		tmp = mass[i];
@@ -88,7 +90,6 @@ void			ft_get_rest(char *str, t_token **tokens, int i,
 		while (cur->next)
 			cur = cur->next;
 		cur->next = !cur->next ? (t_token *)ft_memalloc(sizeof(t_token)) : 0;
-		cur->value = mass[i];
 		ft_get_rest_2(&cur, labels, &mass, i);
 	}
 	free(mass);
@@ -111,7 +112,7 @@ void			ft_define_tokens(char *str, t_token **tokens, t_label **labels)
 	while (str[++i] == ' ' || str[i] == '\t')
 		;
 	y = i;
-	while (str[++i] != ' ' && str[i] != '\t')
+	while (str[i] && str[++i] != ' ' && str[i] != '\t')
 		;
 	cur->value = ft_strsub(str, y, i - y);
 	cur->type = OP;

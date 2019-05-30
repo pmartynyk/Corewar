@@ -26,8 +26,9 @@ static void		ft_ldi_4(t_token **token, t_label **labels, int **mass, int fd2)
 	else if ((*token)->type == 2)
 		(*mass)[1] = ft_atoi((*token)->value + 1);
 	else if ((*token)->type == 5)
-		(*mass)[1] = ft_get_label_val((*token)->value + 1, labels) -
-	g_byte_pos + 3;
+		(*mass)[1] = ft_get_label_val((*token)->value + 1, labels) - g_byte_pos
+	+ (ft_get_label_val((*token)->value + 1,
+		labels) - g_byte_pos <= 0 ? 4 : 3);
 	else
 		ft_death("Bad second argument for ldi!!!");
 	if ((*token)->type == 1)

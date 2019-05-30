@@ -12,11 +12,17 @@
 
 #include "../includes/corewar.h"
 
-void	fill_header(void)
+void	fill_header(int x)
 {
 	WINDOW	*header;
 
-	header = newwin(5, 192, 1, 70);
+	if (x > 192)
+		x = 192;
+	if (x > 90)
+		x = (x - 60) / 2;
+	else
+		return ;
+	header = newwin(5, 90, 1, x);
 	wattron(header, COLOR_PAIR(3));
 	wprintw(header, "`¶¶¶¶`````¶¶¶¶````¶¶¶¶¶````¶¶¶¶¶```¶¶```¶¶```¶¶¶¶````");
 	wprintw(header, "¶¶¶¶¶\n¶¶``¶¶```¶¶``¶¶```¶¶``¶¶```¶¶``````¶¶```¶¶``¶¶`");
@@ -31,27 +37,28 @@ void	fill_header(void)
 
 void	fill_info(t_vmka *all, WINDOW **info, int i)
 {
-	fill_header();
-	wprintw((*info), "_____________________________\n");
-	wprintw((*info), "                  INFORMATION\n");
-	wprintw((*info), "CYCLES/SEC: %.f\n", 1000 / all->speed + 0.5);
-	wprintw((*info), "CYCLES: %d\n", all->cycles);
-	wprintw((*info), "CYCLES TO DIE: %d\n\n\n", all->cycles_to_die);
-	wprintw((*info), "_____________________________\n");
-	wprintw((*info), "                      PLAYERS\n");
+	wprintw(*info, "_____________________________\n");
+	wprintw(*info, "                  INFORMATION\n");
+	wprintw(*info, "CYCLES/SEC: %.f\n", 1000 / all->speed + 0.5);
+	wprintw(*info, "CYCLES: %d\n", all->cycles);
+	wprintw(*info, "CYCLES TO DIE: %d\n\n\n", all->cycles_to_die);
+	wprintw(*info, "_____________________________\n");
+	wprintw(*info, "                      PLAYERS\n");
 	while (++i < 4 && all->bot[i]->name[0])
 	{
-		wprintw((*info), "\nPLAYER %d: ", i + 1);
-		wattron((*info), COLOR_PAIR(i + 1));
-		wprintw((*info), "%s\n", all->bot[i]->name);
-		wattroff((*info), COLOR_PAIR(i + 1));
-		wprintw((*info), "LAST LIVE: %d\n", last_live(all->carr, i + 1));
-		wprintw((*info), "NUMBER OF LIVE: %d\n", count_live(all->carr, i + 1));
+		wprintw(*info, "\nPLAYER %d: ", i + 1);
+		wattron(*info, COLOR_PAIR(i + 1));
+		wprintw(*info, "%s\n", all->bot[i]->name);
+		wattroff(*info, COLOR_PAIR(i + 1));
+		wprintw(*info, "LAST LIVE: %d\n", last_live(all->carr, i + 1));
+		wprintw(*info, "NUMBER OF LIVE: %d\n", count_live(all->carr, i + 1));
 	}
-	wprintw((*info), "\n\n_____________________________\n");
-	wprintw((*info), "                      HOTKEYS\n");
-	wprintw((*info), "\"Q\" - Speed UP\n\n\"A\" - Speed DOWN\n");
-	wprintw((*info), "\n\"P\" / \"space\" - Pause\n\n\"Esc\" - Close program");
+	wprintw(*info, "\n\n_____________________________\n");
+	wprintw(*info, "                      HOTKEYS\n");
+	wprintw(*info, "\"Q\" - Speed UP\n\n\"A\" - Speed DOWN\n");
+	wprintw(*info, "\n\"P\" / \"space\" - Pause\n\n\"Esc\" - Close program");
+	refresh();
+	wrefresh(*info);
 }
 
 void	pause_game(void)

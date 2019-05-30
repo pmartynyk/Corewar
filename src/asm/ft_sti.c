@@ -17,7 +17,11 @@ static void		ft_sti_4(t_token **token, t_label **labels, int *n)
 	if ((*token)->next)
 		(*token) = (*token)->next;
 	if ((*token)->type == 1)
+	{
 		(*n) = ft_atoi((*token)->value + 1);
+		if ((*n) > 99 || (*n) < 0)
+			ft_death("Bad register!!!");
+	}
 	else if ((*token)->type == 2)
 		(*n) = ft_atoi((*token)->value + 1);
 	else if ((*token)->type == 5)

@@ -13,3 +13,13 @@ SpongeBug SegfaultPants!
 SpongeBug SegfaultPants! 
 SpongeBuuuuuuug SegfaultPaaaaaaaants!" 
 
+live:
+	live %0
+
+while:
+	fork %-10
+	lfork %10
+	ld 0, r1
+	st r1, 50
+	ld 0, r1
+	zjmp %:live

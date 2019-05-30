@@ -63,6 +63,7 @@ static void		get_id_bot(t_vmka **vmka, int step)
 			g_id_players[3] = 4;
 		}
 	}
+	sort_bot(vmka, -1);
 }
 
 /*
@@ -90,9 +91,9 @@ static void		pars_flag_dump(int argc, char **argv, t_vmka **vmka, int *i)
 	int			index;
 
 	if ((*vmka)->visual)
-		error_management("ERROR: don't use -dump with -v!\n");
+		error_management("ERROR: don't use -dump/-dump64 with -v!\n");
 	if ((*i) + 1 >= argc || (*vmka)->dump_cycles > 0)
-		error_management("ERROR: invalid number of cycles!\n");
+		error_management("ERROR: invalid number of cycles1!\n");
 	index = 0;
 	while (argv[(*i) + 1][index])
 	{
@@ -103,6 +104,12 @@ static void		pars_flag_dump(int argc, char **argv, t_vmka **vmka, int *i)
 	}
 	if (ft_atoi(argv[(*i) + 1]) > INT_MAX || argv[(*i) + 1] < 0)
 		error_management("ERROR: invalid number of cycles!\n");
+	if (!(*vmka)->octet_dump && !ft_strcmp(argv[(*i)], "-dump"))
+		(*vmka)->octet_dump = 32;
+	else if (!(*vmka)->octet_dump && !ft_strcmp(argv[(*i)], "-dump64"))
+		(*vmka)->octet_dump = 64;
+	else
+		error_management("ERROR: don't use -dump with -dump64!\n");
 	(*vmka)->dump_cycles = ft_atoi(argv[(*i) + 1]);
 	(*i) += 1;
 }
@@ -115,7 +122,7 @@ void			parsing_argv_params(int argc, char **argv, t_vmka **vmka, int i)
 {
 	while (++i < argc)
 	{
-		if (!ft_strcmp(argv[i], "-dump"))
+		if (!ft_strcmp(argv[i], "-dump") || !ft_strcmp(argv[i], "-dump64"))
 			pars_flag_dump(argc, argv, vmka, &i);
 		else if (!ft_strcmp(argv[i], "-n"))
 			pars_flag_n(argc, argv, vmka, &i);
@@ -136,6 +143,4 @@ void			parsing_argv_params(int argc, char **argv, t_vmka **vmka, int i)
 			error_management("ERROR: unknown type of data!\n");
 	}
 	get_id_bot(vmka, -1);
-	sort_bot(vmka, -1);
-	(*vmka)->cycles_to_die = CYCLE_TO_DIE;
 }

@@ -56,9 +56,15 @@ void		ft_write_name(int fd2, char *str, int flag)
 	char	*res;
 
 	res = ft_strnew(flag == 1 ? PROG_NAME_LENGTH : COMMENT_LENGTH);
-	i = -1;
-	while (str[++i])
-		res[i] = str[i];
+	i = 0;
+	while (str[i])
+	{
+		if (g_kostil != 3)
+			res[i] = g_kostil == flag ? 0 : str[i];
+		else
+			res[i] = 0;
+		i++;
+	}
 	if (i > (flag == 1 ? PROG_NAME_LENGTH : COMMENT_LENGTH))
 		ft_death(flag == 1 ? "Champ name too big" : "Comment too big");
 	while (++i <= (flag == 1 ? PROG_NAME_LENGTH : COMMENT_LENGTH))

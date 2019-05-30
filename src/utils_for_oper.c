@@ -29,6 +29,7 @@ void		value(t_vmka **vmka, int start_pos, int dir_size, int *arg)
 	}
 	ft_memcpy(&(*arg), str, 4);
 	reverse_bits(&(*arg), 4);
+	free(str);
 }
 
 int			ind(t_vmka **vmka, t_carr *carr, int step, int size)
